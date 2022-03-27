@@ -64,20 +64,9 @@ let balls = [ball1, ball2, ball3, ball4];
 ballsActive = 0;
 ballsServed = 0;
 
-let xvector = Math.pi;
-let yvector = Math.pi;
-while ((xvector / yvector) % Math.pi == 0) {
-	joe = Math.random();
-	if (joe > 0.5) {
-		polarity = -1;
-	} else {
-		polarity = 1;
-	}
-	xvector = Math.random() * polarity;
-	yvector = Math.random() * polarity;
-}
+let speed = 0.3;
 
-async function serve(yvector, xvector) {
+async function serve() {
 	for (let i = 3; i >= 0; i--) {
 		text(i, 10, 17);
 		await delay(1000);
@@ -90,30 +79,26 @@ async function serve(yvector, xvector) {
 		let ball = balls[i];
 		ball.x = width / 2;
 		ball.y = height / 2;
-		let xvector = Math.pi;
-		let yvector = Math.pi;
-		while ((xvector / yvector) % Math.pi == 0) {
-			joe = Math.random();
-			if (joe > 0.5) {
-				polarity = -1;
-			} else {
-				polarity = 1;
-			}
-			xvector = Math.random() * polarity;
-			yvector = Math.random() * polarity;
-		}
-		ball.velocity.x = xvector;
-		ball.velocity.y = yvector;
+
+		let quad = (Math.floor(Math.random() * 4) / 2) * Math.PI;
+
+		let theta = quad;
+		theta += (Math.random() * 0.3 + 0.1) * Math.PI;
+
+		ball.velocity.x = speed * Math.cos(theta);
+		ball.velocity.y = speed * Math.sin(theta);
 		ball.active = true;
 		ballsActive++;
 		ballsServed++;
-		await delay(2000);
+		await delay(3000);
 	}
 }
 serve();
 let score = 0;
 
-function ballBounce() {
+function ballBounce(ball) {
+	ball.velocity.x *= 1.01;
+	ball.velocity.y *= 1.01;
 	score++;
 	text(score, 15, 10);
 }
@@ -141,10 +126,18 @@ function draw() {
 		if (ball.active == false) {
 			continue;
 		}
-		ball.bounce(paddleT, ballBounce);
-		ball.bounce(paddleB, ballBounce);
-		ball.bounce(paddleL, ballBounce);
-		ball.bounce(paddleR, ballBounce);
+		ball.bounce(paddleT, () => {
+			ballBounce(ball);
+		});
+		ball.bounce(paddleB, () => {
+			ballBounce(ball);
+		});
+		ball.bounce(paddleL, () => {
+			ballBounce(ball);
+		});
+		ball.bounce(paddleR, () => {
+			ballBounce(ball);
+		});
 
 		if (ball.x > 256 || ball.x < 0 || ball.y > 192 || ball.y < 0) {
 			ball.active = false;
