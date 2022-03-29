@@ -19,11 +19,12 @@ let snake = world.createSprite(9, 10, 2);
 snake.spriteSheet = loadImage(QuintOS.dir + '/img/snakes.png');
 snake.loadAni('head-up', { pos: [0, 0] });
 snake.ani('head-up');
-
 world.loadAni('apple', { pos: [0, 3] });
-
 /* load the grass tiles */
-
 for (let i = 0; i < 10; i++) {
 	world.loadAni('grass' + i, { pos: [1, i] });
+}
+
+for (let i = 0; i < 5; i++) {
+	world.loadAni('pipe' + i, { pos: [2, i] });
 }
