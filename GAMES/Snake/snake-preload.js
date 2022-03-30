@@ -25,6 +25,8 @@ for (let i = 0; i < 10; i++) {
 	world.loadAni('grass' + i, { pos: [1, i] });
 }
 
-for (let i = 0; i < 5; i++) {
-	world.loadAni('pipe' + i, { pos: [2, i] });
+let pipes = world.createGroup('pipes');
+
+for (let i = 0; i < 8; i++) {
+	pipes.loadAni('pipe' + i, { pos: [2, i] });
 }
