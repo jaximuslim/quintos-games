@@ -23,7 +23,6 @@ for (let col = 1; col < 19; col++) {
 	} else if (col == 18) {
 		type = 3;
 	}
-
 	pipes.createSprite('pipe' + type, 0, col, 1);
 	pipes.createSprite('pipe' + type, 13, col, 1);
 }
@@ -34,7 +33,6 @@ for (let row = 1; row < 13; row++) {
 	} else if (row == 12) {
 		type = 3;
 	}
-
 	pipes.createSprite('pipe' + type, row, 0, 1).rotation = 90;
 	pipes.createSprite('pipe' + type, row, 19, 1).rotation = 90;
 }
@@ -49,6 +47,9 @@ async function move() {
 	move();
 }
 move();
+if (snake.collide(pipes)) {
+	log('hi');
+}
 
 function keyPressed() {
 	if (key == 'ArrowUp' && previousDirection != 'ArrowDown') {
