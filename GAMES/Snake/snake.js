@@ -15,7 +15,6 @@ for (let row = 0; row < 14; row++) {
 		let grass = world.createSprite('grass' + randomNum, row, col);
 	}
 }
-
 for (let col = 1; col < 19; col++) {
 	let type = 2;
 	if (col == 1) {
@@ -44,33 +43,45 @@ pipes.createSprite('pipe5', 0, 19, 1);
 pipes.createSprite('pipe6', 13, 0, 1);
 pipes.createSprite('pipe7', 13, 19, 1);
 
+function keyPressed() {
+	if (key == 'ArrowUp' && previousDirection != 'ArrowDown') {
+		inputDirection = 'up';
+		previousDirection = key;
+		snake.ani('head-up');
+	}
+	if (key == 'ArrowDown' && previousDirection != 'ArrowUp') {
+		inputDirection = 'down';
+		previousDirection = key;
+		snake.mirrorY(-1);
+	}
+	if (key == 'ArrowLeft' && previousDirection != 'ArrowRight') {
+		inputDirection = 'left';
+		previousDirection = key;
+		snake.ani('head-left');
+	}
+	if (key == 'ArrowRight' && previousDirection != 'ArrowLeft') {
+		inputDirection = 'right';
+		previousDirection = key;
+		snake.mirrorX(-1);
+	}
+}
 async function move() {
 	await snake.move(inputDirection, 0.5);
 	move();
 }
 move();
-
-function keyPressed() {
-	if (key == 'ArrowUp' && previousDirection != 'ArrowDown') {
-		inputDirection = 'up';
-		previousDirection = key;
-	}
-	if (key == 'ArrowDown' && previousDirection != 'ArrowUp') {
-		inputDirection = 'down';
-		previousDirection = key;
-	}
-	if (key == 'ArrowLeft' && previousDirection != 'ArrowRight') {
-		inputDirection = 'left';
-		previousDirection = key;
-	}
-	if (key == 'ArrowRight' && previousDirection != 'ArrowLeft') {
-		inputDirection = 'right';
-		previousDirection = key;
-	}
-}
-
+log(apple.x);
+log(apple.y);
 function draw() {
 	background(colorPal(2));
-
-	drawSprites();
+	if (snake.collide(pipes)) {
+		text('Gameover');
+	}
+	if (snake.x == apple.x && (snake.y - apple.y < 0.5 || snake.y - apple.y > 0.5)) {
+		snake.ani('head-eat');
+		log('hi');
+		apple.row = Math.floor(Math.random() * 17);
+		apple.col = Math.floor(Math.random() * 11);
+	}
+	if (snake.x) drawSprites();
 }
