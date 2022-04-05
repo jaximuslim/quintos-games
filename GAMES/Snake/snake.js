@@ -22,7 +22,6 @@ for (let col = 1; col < 19; col++) {
 	} else if (col == 18) {
 		type = 3;
 	}
-
 	pipes.createSprite('pipe' + type, 0, col, 1);
 	pipes.createSprite('pipe' + type, 13, col, 1);
 }
@@ -33,7 +32,6 @@ for (let row = 1; row < 13; row++) {
 	} else if (row == 12) {
 		type = 3;
 	}
-
 	pipes.createSprite('pipe' + type, row, 0, 1).rotation = 90;
 	pipes.createSprite('pipe' + type, row, 19, 1).rotation = 90;
 }
@@ -70,8 +68,29 @@ async function move() {
 	move();
 }
 move();
-log(apple.x);
-log(apple.y);
+if (snake.collide(pipes)) {
+	log('hi');
+}
+
+function keyPressed() {
+	if (key == 'ArrowUp' && previousDirection != 'ArrowDown') {
+		inputDirection = 'up';
+		previousDirection = key;
+	}
+	if (key == 'ArrowDown' && previousDirection != 'ArrowUp') {
+		inputDirection = 'down';
+		previousDirection = key;
+	}
+	if (key == 'ArrowLeft' && previousDirection != 'ArrowRight') {
+		inputDirection = 'left';
+		previousDirection = key;
+	}
+	if (key == 'ArrowRight' && previousDirection != 'ArrowLeft') {
+		inputDirection = 'right';
+		previousDirection = key;
+	}
+}
+
 function draw() {
 	background(colorPal(2));
 	if (snake.collide(pipes)) {
@@ -83,5 +102,4 @@ function draw() {
 		apple.row = Math.floor(Math.random() * 17);
 		apple.col = Math.floor(Math.random() * 11);
 	}
-	if (snake.x) drawSprites();
 }
