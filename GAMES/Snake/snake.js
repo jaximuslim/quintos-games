@@ -4,10 +4,11 @@ let inputDirection = 'up';
 let previousDirection;
 
 let score = 0; // number of apples eaten
+let eating = false;
 
 text('SCORE: ' + score, 17, 6);
 
-let apple = world.createSprite('apple', 6.5, 9.5, 1);
+let apple = world.createSprite('apple', 6, 9, 1);
 
 for (let row = 0; row < 14; row++) {
 	for (let col = 0; col < 20; col++) {
@@ -45,61 +46,69 @@ function keyPressed() {
 	if (key == 'ArrowUp' && previousDirection != 'ArrowDown') {
 		inputDirection = 'up';
 		previousDirection = key;
-		snake.ani('head-up');
 	}
 	if (key == 'ArrowDown' && previousDirection != 'ArrowUp') {
 		inputDirection = 'down';
 		previousDirection = key;
-		snake.mirrorY(-1);
 	}
 	if (key == 'ArrowLeft' && previousDirection != 'ArrowRight') {
 		inputDirection = 'left';
 		previousDirection = key;
-		snake.ani('head-left');
 	}
 	if (key == 'ArrowRight' && previousDirection != 'ArrowLeft') {
 		inputDirection = 'right';
 		previousDirection = key;
-		snake.mirrorX(-1);
 	}
 }
+
+function changeDirection() {
+	let mod = '';
+	if (eating) mod = '-eat';
+	if (inputDirection == 'up') {
+		snake.ani('head-up' + mod);
+		snake.mirrorX(1);
+		snake.mirrorY(1);
+	}
+	if (inputDirection == 'down') {
+		snake.ani('head-up' + mod);
+		snake.mirrorX(1);
+		snake.mirrorY(-1);
+	}
+	if (inputDirection == 'left') {
+		snake.ani('head-left' + mod);
+		snake.mirrorX(1);
+		snake.mirrorY(1);
+	}
+	if (inputDirection == 'right') {
+		snake.ani('head-left' + mod);
+		snake.mirrorX(-1);
+		snake.mirrorY(1);
+	}
+}
+
 async function move() {
+	// snake close to apple
+	if (snake.row == apple.row || snake.col == apple.col) {
+		eating = true;
+	} else {
+		eating = false;
+	}
+
+	// snake eats apple
+	if (snake.row == apple.row && snake.col == apple.col) {
+		apple.row = Math.ceil(Math.random() * 13);
+		apple.col = Math.ceil(Math.random() * 11);
+	}
+
+	changeDirection();
+
 	await snake.move(inputDirection, 0.5);
 	move();
 }
 move();
-if (snake.collide(pipes)) {
-	log('hi');
-}
-
-function keyPressed() {
-	if (key == 'ArrowUp' && previousDirection != 'ArrowDown') {
-		inputDirection = 'up';
-		previousDirection = key;
-	}
-	if (key == 'ArrowDown' && previousDirection != 'ArrowUp') {
-		inputDirection = 'down';
-		previousDirection = key;
-	}
-	if (key == 'ArrowLeft' && previousDirection != 'ArrowRight') {
-		inputDirection = 'left';
-		previousDirection = key;
-	}
-	if (key == 'ArrowRight' && previousDirection != 'ArrowLeft') {
-		inputDirection = 'right';
-		previousDirection = key;
-	}
-}
 
 function draw() {
 	background(colorPal(2));
-	if (snake.collide(pipes)) {
-		text('Gameover');
-	}
-	if (snake.x == apple.x && (snake.y - apple.y < 0.5 || snake.y - apple.y > 0.5)) {
-		snake.ani('head-eat');
-		log('hi');
-		apple.row = Math.floor(Math.random() * 17);
-		apple.col = Math.floor(Math.random() * 11);
-	}
+	snake.collide(pipes);
+	drawSprites();
 }
