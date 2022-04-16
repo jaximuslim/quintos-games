@@ -96,12 +96,10 @@ async function move() {
 
 	// snake eats apple
 	if (snake.row == apple.row && snake.col == apple.col) {
-		apple.row = Math.ceil(Math.random() * 13);
+		apple.row = Math.ceil(Math.random() * 12);
 		apple.col = Math.ceil(Math.random() * 11);
 	}
-
 	changeDirection();
-
 	await snake.move(inputDirection, 0.5);
 	move();
 }

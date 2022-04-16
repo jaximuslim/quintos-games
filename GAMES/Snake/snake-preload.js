@@ -16,12 +16,15 @@ let world = createTiles(8, 0, 16);
 world.spriteSheet = loadImage(QuintOS.dir + '/img/world.png');
 
 let snake = world.createSprite(9, 10, 2);
+
 snake.spriteSheet = loadImage(QuintOS.dir + '/img/snakes.png');
 snake.loadAni('head-up', { pos: [0, 0] });
 snake.ani('head-up');
 snake.loadAni('head-left', { pos: [0, 6] });
 snake.loadAni('head-up-eat', { pos: [1, 0], frames: 5 });
 snake.loadAni('head-left-eat', { pos: [1, 5], frames: 5 });
+snake.loadAni('snake-torso', { pos: [0, 2], frames: 2 });
+snake.loadAni('snake-tail', { pos: [0, 4], frames: 2 });
 
 world.loadAni('apple', { pos: [0, 3] });
 /* load the grass tiles */
