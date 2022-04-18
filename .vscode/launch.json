@@ -5,6 +5,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"type": "java",
+			"name": "Launch Wordle",
+			"request": "launch",
+			"mainClass": "games_java.Wordle.Wordle",
+			"projectName": "quintos-games_e5c38986"
+		},
+		{
 			"type": "pwa-chrome",
 			"request": "launch",
 			"name": "Launch Chrome against localhost",
