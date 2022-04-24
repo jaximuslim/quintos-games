@@ -6,14 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Collections;
 
 public class Wordle {
 	ArrayList<String> dictionary;
 	ArrayList<String> words;
 	String[] board;
-	boolean gameOver = false;
-	String rectType = "solid";
 
 	public Wordle() {
 		setupGame();
@@ -56,34 +53,49 @@ public class Wordle {
 
 	/* Display all the boxes for the letters */
 	void displayBoxes() {
-		for (int row = 1; row < 7; row++) {
+		erase();
+		for (int row = 0; row < 6; row++) {
 			for (int col = 1; col < 6; col++) {
-				textRect(row * 3, col * 3, 3, 3);
+				textRect(2 + row * 3, col * 3, 3, 3);
 			}
 		}
 	}
 
+	void displayInfo() {
+		int row = 10;
+		textRect(row, 20, 3, 3, "solid");
+		text("letter is not found in word", row, 24);
+		row += 3;
+		textRect(row, 20, 3, 3, "outline");
+		text("letter is in the word", row, 24);
+		row += 3;
+		textRect(row, 20, 3, 3, "dashed");
+		text("letter is in the correct position", row, 24, 14);
+	}
+
 	void startGame() {
 		/* pick new word */
-
-		int validGuesses = 0;
 		int randomWordIndex = (int) (Math.floor(Math.random() * words.size()));
 		String word = words.get(randomWordIndex);
 		log(word);
 
 		displayBoxes();
+		displayInfo();
 
-		while (gameOver == false) {
-			String guess = (prompt("Guess the word!", 3, 18, 20)).toUpperCase();
+		int validGuesses = 0;
+		while (validGuesses < 6) {
+			String guess = (prompt("Guess the word!", 2, 18, 20)).toUpperCase();
 			if (guess.length() != 5) {
-				alert("Only 5 letter words!", 3, 18, 20);
+				alert("Only 5 letter words!", 2, 18, 20);
+			} else if (dictionary.contains(guess) == false) {
+				alert("Not a real word", 2, 18, 20);
+				log(guess);
 			} else {
 				String[] word_alphabets = word.split("");
 				String[] guess_alphabets = guess.split("");
 				log(guess_alphabets);
-
 				log(word_alphabets);
-				for (int i = 0; i < guess_alphabets.length(); i++) {
+				for (int i = 0; i < guess_alphabets.length; i++) {
 					if (word_alphabets[i] == guess_alphabets[i]) {
 						eraseRect(3 + validGuesses * 3, 3 + i * 3, 3, 3);
 						textRect(3 + validGuesses * 3, 3 + i * 3, 3, 3, "dashed");
@@ -92,11 +104,17 @@ public class Wordle {
 						textRect(3 + validGuesses * 3, 3 + i * 3, 3, 3, "outline");
 					}
 					text(guess_alphabets[i], 4 + validGuesses * 3, 4 + i * 3);
-
 				}
 				validGuesses++;
+				if (word == guess) {
+					alert("You win!", 3, 18, 20);
+					break;
+				} else if (validGuesses == 6) {
+					alert("You Lose, the word was " + word, 3, 18, 20);
+				}
 			}
 		}
+		startGame();
 	}
 
 	public static void main(String[] args) {
