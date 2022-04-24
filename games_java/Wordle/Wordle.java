@@ -11,6 +11,7 @@ public class Wordle {
 	ArrayList<String> dictionary;
 	ArrayList<String> words;
 	String[] board;
+	String unused_alpha = "ABCDEFGHIJKLMNOPQRSTUV";
 
 	public Wordle() {
 		setupGame();
@@ -71,6 +72,7 @@ public class Wordle {
 		row += 3;
 		textRect(row, 20, 3, 3, "dashed");
 		text("letter is in the correct position", row, 24, 14);
+		text("Hi", 21, 5);
 	}
 
 	void startGame() {
@@ -78,7 +80,6 @@ public class Wordle {
 		int randomWordIndex = (int) (Math.floor(Math.random() * words.size()));
 		String word = words.get(randomWordIndex);
 		log(word);
-
 		displayBoxes();
 		displayInfo();
 
@@ -96,14 +97,22 @@ public class Wordle {
 				log(guess_alphabets);
 				log(word_alphabets);
 				for (int i = 0; i < guess_alphabets.length; i++) {
-					if (word_alphabets[i] == guess_alphabets[i]) {
-						eraseRect(3 + validGuesses * 3, 3 + i * 3, 3, 3);
-						textRect(3 + validGuesses * 3, 3 + i * 3, 3, 3, "dashed");
-					} else if (word.contains(guess_alphabets[i])) {
-						eraseRect(3 + validGuesses * 3, 3 + i * 3, 3, 3);
-						textRect(3 + validGuesses * 3, 3 + i * 3, 3, 3, "outline");
+					for (int k = 0; k < unused_alpha.length(); k++) {
+						char alpha = (char) (guess_alphabets[i]);
+						log(alpha);
+						if (alpha == unused_alpha.charAt(k)) {
+							log("hi");
+							unused_alpha.replace(guess_alphabets[i], "?");
+						}
 					}
-					text(guess_alphabets[i], 4 + validGuesses * 3, 4 + i * 3);
+					if (word_alphabets[i] == guess_alphabets[i]) {
+						eraseRect(2 + validGuesses * 3, 3 + i * 3, 3, 3);
+						textRect(2 + validGuesses * 3, 3 + i * 3, 3, 3, "dashed");
+					} else if (word.contains(guess_alphabets[i])) {
+						eraseRect(2 + validGuesses * 3, 3 + i * 3, 3, 3);
+						textRect(2 + validGuesses * 3, 3 + i * 3, 3, 3, "outline");
+					}
+					text(guess_alphabets[i], 3 + validGuesses * 3, 4 + i * 3);
 				}
 				validGuesses++;
 				if (word == guess) {
